@@ -1,7 +1,6 @@
 package controller
 
 import (
-	. "api-task/config"
 	. "api-task/dao"
 	. "api-task/models"
 	"api-task/util"
@@ -12,15 +11,14 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-var dao = TaskDAO{}
-var config = Config{}
+var taskDAO = TaskDAO{}
 
 func init() {
 	config.Read()
 
-	dao.Server = config.Server
-	dao.Database = config.Database
-	dao.Connect()
+	taskDAO.Server = config.Server
+	taskDAO.Database = config.Database
+	taskDAO.Connect()
 }
 func CreateTask(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
@@ -30,7 +28,7 @@ func CreateTask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	task.ID = bson.NewObjectId()
-	if err := dao.Insert(task); err != nil {
+	if err := taskDAO.Insert(task); err != nil {
 		util.RespondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
@@ -38,7 +36,7 @@ func CreateTask(w http.ResponseWriter, r *http.Request) {
 	util.RespondWithJson(w, http.StatusCreated, task)
 }
 func ListAllTask(w http.ResponseWriter, r *http.Request) {
-	tasks, err := dao.FindAll()
+	tasks, err := taskDAO.FindAll()
 	if err != nil {
 		util.RespondWithJson(w, http.StatusInternalServerError, err.Error())
 		return
