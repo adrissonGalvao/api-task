@@ -3,20 +3,16 @@ package dao
 import (
 	"log"
 
+	"api-task/lib"
+	. "api-task/models"
+
 	mgo "gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
-
-	. "api-task/models"
 )
 
 type TaskDAO struct {
-	Server   string
-	Database string
+	lib.Data
 }
-
-var db *mgo.Database
-
-const COLLECTION = "task"
 
 func (m *TaskDAO) Connect() {
 	session, err := mgo.Dial(m.Server)
@@ -27,11 +23,11 @@ func (m *TaskDAO) Connect() {
 }
 
 func (m *TaskDAO) FindAll() ([]Task, error) {
-	var task []Task
-	err := db.C(COLLECTION).Find(bson.M{}).All(&task)
-	return task, err
+	var tasks []Task
+	err := db.C("task").Find(bson.M{}).All(&tasks)
+	return tasks, err
 }
 func (m *TaskDAO) Insert(task Task) error {
-	err := db.C(COLLECTION).Insert(&task)
+	err := db.C("task").Insert(&task)
 	return err
 }
