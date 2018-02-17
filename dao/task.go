@@ -31,3 +31,17 @@ func (m *TaskDAO) Insert(task Task) error {
 	err := db.C("task").Insert(&task)
 	return err
 }
+func (m *TaskDAO) Update(task Task) error {
+	err := db.C("task").UpdateId(task.ID, &task)
+	return err
+}
+func (m *TaskDAO) FindById(id string) (Task, error) {
+	var task Task
+	err := db.C("task").FindId(bson.ObjectIdHex(id)).One(&task)
+	return task, err
+}
+
+func (m *TaskDAO) Delete(task Task) error {
+	err := db.C("task").Remove(&task)
+	return err
+}

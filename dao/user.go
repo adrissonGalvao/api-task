@@ -31,3 +31,13 @@ func (m *UserDAO) Insert(user User) error {
 	err := db.C("user").Insert(&user)
 	return err
 }
+func (m *UserDAO) FindById(id string) (User, error) {
+	var user User
+	err := db.C("user").FindId(bson.ObjectIdHex(id)).One(&user)
+	return user, err
+}
+
+func (m *UserDAO) Delete(user User) error {
+	err := db.C("user").Remove(&user)
+	return err
+}
